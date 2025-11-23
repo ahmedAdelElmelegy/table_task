@@ -8,27 +8,27 @@ class TableCubit extends Cubit<TableState> {
   TableCubit() : super(TableInitial());
 
   List<GlobalKey<FormState>> formKey = List.generate(
-    4,
+    10,
     (_) => GlobalKey<FormState>(),
   );
 
-  List<bool> formHasError = List.generate(4, (_) => false);
+  List<bool> formHasError = List.generate(10, (_) => false);
   List<ItemModel> items = [];
-  int numberOfForms = 4;
+  int numberOfForms = 10;
 
   List<TextEditingController> nameControllers = List.generate(
-    4,
+    10,
     (index) => TextEditingController(),
   );
   List<TextEditingController> priceControllers = List.generate(
-    4,
+    10,
     (index) => TextEditingController(),
   );
   List<TextEditingController> descControllers = List.generate(
-    4,
+    10,
     (index) => TextEditingController(),
   );
-  List<List<dynamic>> tagsControllers = List.generate(4, (index) => []);
+  List<List<dynamic>> tagsControllers = List.generate(10, (index) => []);
   PageController pageController = PageController();
   bool isUpdate = false;
   void updateValue(bool value) {

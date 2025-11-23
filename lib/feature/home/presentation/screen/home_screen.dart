@@ -77,8 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: AnimatedContainer(
                               padding: const EdgeInsets.all(16),
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeInCubic,
+                              duration: const Duration(milliseconds: 500),
+
+                              curve: Curves.easeInOut,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 border: Border(
@@ -121,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   color: Colors.black.withValues(alpha: 0.3),
                   child: const Center(
-                    child: CircularProgressIndicator.adaptive(),
+                    child: CircularProgressIndicator(color: Colors.white),
                   ),
                 ),
             ],

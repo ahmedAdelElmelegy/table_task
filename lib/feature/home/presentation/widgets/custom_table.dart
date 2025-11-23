@@ -20,7 +20,7 @@ class _CustomTableState extends State<CustomTable> {
 
         return Container(
           width: double.infinity,
-          // height: MediaQuery.sizeOf(context).height * .6,
+          height: 600,
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border(top: BorderSide(color: Colors.blue, width: 4)),
