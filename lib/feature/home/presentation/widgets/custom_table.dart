@@ -1,0 +1,213 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:table_task2/feature/home/presentation/model/item_model.dart';
+import 'package:table_task2/manager/cubit/table_cubit.dart';
+
+class CustomTable extends StatefulWidget {
+  const CustomTable({super.key});
+
+  @override
+  State<CustomTable> createState() => _CustomTableState();
+}
+
+class _CustomTableState extends State<CustomTable> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<TableCubit, TableState>(
+      builder: (context, state) {
+        final cubit = BlocProvider.of<TableCubit>(context);
+
+        return Container(
+          width: double.infinity,
+          // height: MediaQuery.sizeOf(context).height * .6,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(top: BorderSide(color: Colors.blue, width: 4)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 12,
+                spreadRadius: 0,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          child: SfDataGrid(
+            // rowHeight: 100,
+            autoExpandGroups: true,
+            selectionMode: SelectionMode.singleDeselect,
+
+            isScrollbarAlwaysShown: true,
+            gridLinesVisibility: GridLinesVisibility.both,
+            // defaultColumnWidth: 120,
+            rowsPerPage: 10,
+
+            allowSorting: true,
+            headerGridLinesVisibility: GridLinesVisibility.both,
+            columnWidthMode: ColumnWidthMode.fill,
+            frozenColumnsCount: 0,
+            headerRowHeight: 55,
+
+            source: EmployeeDataSource(
+              employees: cubit.items,
+              context: context,
+            ),
+            columns: _tableColumns(),
+          ),
+        );
+      },
+    );
+  }
+
+  List<GridColumn> _tableColumns() {
+    return [
+      GridColumn(columnName: 'name', label: _headerText('Name')),
+      GridColumn(columnName: 'price', label: _headerText('Price')),
+      GridColumn(columnName: 'description', label: _headerText('Description')),
+      GridColumn(columnName: 'tags', label: _headerText('Tags')),
+      GridColumn(columnName: 'actions', label: _headerText('Actions')),
+    ];
+  }
+
+  Widget _headerText(String title) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      alignment: Alignment.centerLeft,
+      child: Text(
+        title,
+        style: TextStyle(
+          color: Colors.black,
+          fontFamily: 'Urbanist',
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
+}
+
+class EmployeeDataSource extends DataGridSource {
+  final BuildContext context;
+
+  EmployeeDataSource({
+    required List<ItemModel> employees,
+    required this.context,
+  }) {
+    _employees = employees
+        .map<DataGridRow>(
+          (e) => DataGridRow(
+            cells: [
+              DataGridCell<String>(columnName: 'name', value: e.name),
+              DataGridCell<double>(columnName: 'price', value: e.price),
+              DataGridCell<String>(
+                columnName: 'description',
+                value: e.description,
+              ),
+              DataGridCell<List<dynamic>>(columnName: 'tags', value: e.tags),
+              DataGridCell<Widget>(columnName: 'actions', value: e.actions),
+            ],
+          ),
+        )
+        .toList();
+  }
+
+  List<DataGridRow> _employees = [];
+
+  @override
+  List<DataGridRow> get rows => _employees;
+
+  @override
+  DataGridRowAdapter? buildRow(DataGridRow row) {
+    final index = _employees.indexOf(row);
+
+    final oldItem = _employees[index].getCells();
+    final cubit = BlocProvider.of<TableCubit>(context);
+
+    return DataGridRowAdapter(
+      cells: row.getCells().map<Widget>((dataGridCell) {
+        return Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.all(16.0),
+          child: dataGridCell.columnName == 'actions'
+              ? Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        cubit.updateItem(
+                          index,
+                          ItemModel(
+                            name: oldItem[0].value,
+                            price: oldItem[1].value,
+                            description: oldItem[2].value,
+                            tags: oldItem[3].value,
+                            actions: oldItem[4].value,
+                          ),
+                        );
+                      },
+                      child: Icon(Icons.edit),
+                    ),
+                    SizedBox(width: 16),
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Delete Item'),
+                              content: Text(
+                                'Are you sure you want to delete this item?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    cubit.deleteItem(index);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Icon(Icons.delete, color: Colors.red),
+                    ),
+                  ],
+                )
+              : dataGridCell.columnName == 'tags'
+              ? Text(
+                  dataGridCell.value.join(', '),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Urbanist',
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                )
+              : Text(
+                  dataGridCell.value.toString(),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Urbanist',
+                    // fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+        );
+      }).toList(),
+    );
+  }
+}
