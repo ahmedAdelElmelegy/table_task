@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:table_task2/feature/home/presentation/model/item_model.dart';
 import 'package:table_task2/feature/home/presentation/widgets/filter_field.dart';
+import 'package:table_task2/feature/home/presentation/widgets/table_action.dart';
 import 'package:table_task2/manager/cubit/table_cubit.dart';
 
 class CustomTable extends StatefulWidget {
@@ -88,7 +89,7 @@ class _CustomTableState extends State<CustomTable> {
           color: Colors.black,
           fontFamily: 'Urbanist',
           fontWeight: FontWeight.bold,
-          fontSize: 18,
+          fontSize: 16,
         ),
       ),
     );
@@ -172,62 +173,11 @@ class EmployeeDataSource extends DataGridSource {
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.all(16.0),
           child: dataGridCell.columnName == 'actions'
-              ? Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        cubit.updateItem(
-                          index,
-                          ItemModel(
-                            name: oldItem[0].value,
-                            price: oldItem[1].value,
-                            description: oldItem[2].value,
-                            tags: oldItem[3].value,
-                            actions: oldItem[4].value,
-                          ),
-                        );
-                      },
-                      child: Icon(Icons.edit),
-                    ),
-                    SizedBox(width: 16),
-                    InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text('Delete Item'),
-                              content: Text(
-                                'Are you sure you want to delete this item?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text('Cancel'),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                  ),
-                                  onPressed: () {
-                                    cubit.deleteItem(index);
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    'Delete',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      child: Icon(Icons.delete, color: Colors.red),
-                    ),
-                  ],
+              ? TableAction(
+                  cubit: cubit,
+                  index: index,
+                  oldItem: oldItem,
+                  context: context,
                 )
               : dataGridCell.columnName == 'tags'
               ? Text(
@@ -236,7 +186,7 @@ class EmployeeDataSource extends DataGridSource {
                     color: Colors.black,
                     fontFamily: 'Urbanist',
                     // fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 )
               : Text(
@@ -245,7 +195,7 @@ class EmployeeDataSource extends DataGridSource {
                     color: Colors.black,
                     fontFamily: 'Urbanist',
                     // fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
         );
