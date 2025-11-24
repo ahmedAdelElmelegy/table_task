@@ -1,8 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_task2/feature/home/presentation/widgets/action_btn.dart';
 import 'package:table_task2/feature/home/presentation/widgets/custom_table.dart';
-import 'package:table_task2/feature/home/presentation/widgets/form_item.dart';
+import 'package:table_task2/feature/home/presentation/widgets/form_item_desktop_and_tablet.dart';
+import 'package:table_task2/feature/home/presentation/widgets/form_item_mobile.dart';
 import 'package:table_task2/feature/home/presentation/widgets/validation_summary.dart';
 import 'package:table_task2/manager/cubit/table_cubit.dart';
 
@@ -16,6 +18,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    debugPrint(size.width.toString());
     final tableCubit = BlocProvider.of<TableCubit>(context);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -55,24 +59,28 @@ class _HomeScreenState extends State<HomeScreen> {
           return Stack(
             children: [
               SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     // Validation Summary
                     ValidationSummary(),
 
                     SizedBox(
-                      height: 420,
+                      height: size.width < 600 ? 650 : 420,
                       child: PageView.builder(
                         allowImplicitScrolling: true,
+
                         controller: tableCubit.pageController,
                         scrollDirection: Axis.vertical,
+                        pageSnapping: true,
+
                         physics: const BouncingScrollPhysics(),
 
                         itemCount: tableCubit.numberOfForms,
                         itemBuilder: (context, index) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 80,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: size.width < 1000 ? 24 : 80,
                               vertical: 36,
                             ),
                             child: AnimatedContainer(
@@ -99,7 +107,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ],
                               ),
-                              child: FormItem(index: index),
+                              child: size.width < 600
+                                  ? FormItemMobile(index: index)
+                                  : FormItemDesktopAndTablet(index: index),
                             ),
                           );
                         },
@@ -111,7 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ActionBtn(tableCubit: tableCubit),
                     const SizedBox(height: 24),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 80),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: size.width < 1000 ? 24 : 80,
+                      ),
                       child: const CustomTable(),
                     ),
                     const SizedBox(height: 24),

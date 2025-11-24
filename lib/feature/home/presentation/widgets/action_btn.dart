@@ -8,8 +8,9 @@ class ActionBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 80),
+      padding: EdgeInsets.symmetric(horizontal: size.width < 1000 ? 24 : 80),
       child: Row(
         children: [
           SizedBox(

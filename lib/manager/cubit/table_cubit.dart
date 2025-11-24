@@ -31,6 +31,9 @@ class TableCubit extends Cubit<TableState> {
   List<List<dynamic>> tagsControllers = List.generate(10, (index) => []);
   PageController pageController = PageController();
   bool isUpdate = false;
+  bool isWheelScrolling = false;
+  int currentPage = 0;
+  bool isInsidePageView = false;
   void updateValue(bool value) {
     isUpdate = value;
     // emit(TableUpdated());

@@ -3,15 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_task2/core/widgets/custom_input_field.dart';
 import 'package:table_task2/manager/cubit/table_cubit.dart';
 
-class FormItem extends StatefulWidget {
+class FormItemDesktopAndTablet extends StatefulWidget {
   final int index;
-  const FormItem({super.key, required this.index});
+  const FormItemDesktopAndTablet({super.key, required this.index});
 
   @override
-  State<FormItem> createState() => _FormItemState();
+  State<FormItemDesktopAndTablet> createState() =>
+      _FormItemDesktopAndTabletState();
 }
 
-class _FormItemState extends State<FormItem>
+class _FormItemDesktopAndTabletState extends State<FormItemDesktopAndTablet>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;

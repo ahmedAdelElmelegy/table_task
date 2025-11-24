@@ -12,6 +12,7 @@ class ValidationSummary extends StatefulWidget {
 class _ValidationSummaryState extends State<ValidationSummary> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     final tablecubit = context.watch<TableCubit>();
     final errorCount = tablecubit.formHasError
         .where((hasError) => hasError)
@@ -23,7 +24,10 @@ class _ValidationSummaryState extends State<ValidationSummary> {
         : Container(
             width: double.infinity,
             padding: EdgeInsets.all(16),
-            margin: EdgeInsets.symmetric(horizontal: 80, vertical: 16),
+            margin: EdgeInsets.symmetric(
+              horizontal: size.width < 1000 ? 24 : 80,
+              vertical: 16,
+            ),
             decoration: BoxDecoration(
               color: Colors.red.withValues(alpha: 0.1),
               border: Border.all(color: Colors.red),
