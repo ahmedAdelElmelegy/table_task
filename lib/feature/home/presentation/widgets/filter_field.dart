@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:table_task2/core/widgets/custom_input_field.dart';
 import 'package:table_task2/manager/cubit/table_cubit.dart';
 
@@ -107,7 +106,7 @@ class FilteredFields extends StatelessWidget {
 
             Expanded(
               child: IconButton(
-                icon: Icon(Iconsax.search_normal, color: Colors.blue),
+                icon: Icon(Icons.search, color: Colors.blue, size: 30),
                 onPressed: () {
                   cubit.searchItem();
                 },
