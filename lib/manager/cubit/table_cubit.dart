@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:table_task2/core/utils/app_constants.dart';
 import 'package:table_task2/feature/home/presentation/model/item_model.dart';
 
 part 'table_state.dart';
@@ -8,27 +9,30 @@ class TableCubit extends Cubit<TableState> {
   TableCubit() : super(TableInitial());
 
   List<GlobalKey<FormState>> formKey = List.generate(
-    10,
+    AppConstants.formCount,
     (_) => GlobalKey<FormState>(),
   );
 
-  List<bool> formHasError = List.generate(10, (_) => false);
+  List<bool> formHasError = List.generate(AppConstants.formCount, (_) => false);
   List<ItemModel> items = [];
-  int numberOfForms = 10;
+  int numberOfForms = AppConstants.formCount;
 
   List<TextEditingController> nameControllers = List.generate(
-    10,
+    AppConstants.formCount,
     (index) => TextEditingController(),
   );
   List<TextEditingController> priceControllers = List.generate(
-    10,
+    AppConstants.formCount,
     (index) => TextEditingController(),
   );
   List<TextEditingController> descControllers = List.generate(
-    10,
+    AppConstants.formCount,
     (index) => TextEditingController(),
   );
-  List<List<dynamic>> tagsControllers = List.generate(10, (index) => []);
+  List<List<dynamic>> tagsControllers = List.generate(
+    AppConstants.formCount,
+    (index) => [],
+  );
   late PageController pageController;
   bool isUpdate = false;
   bool isWheelScrolling = false;
@@ -169,5 +173,49 @@ class TableCubit extends Cubit<TableState> {
   void deleteItem(int index) {
     items.removeAt(index);
     emit(TableDeleted());
+  }
+
+  List<ItemModel> searchItems = [];
+  TextEditingController nameSearchController = TextEditingController();
+  TextEditingController priceSearchController = TextEditingController();
+  TextEditingController descriptionSearchController = TextEditingController();
+  List<dynamic> tagsSearchController = [];
+  // Search
+  void searchItem() async {
+    emit(TableLoading());
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    searchItems = items.where((item) {
+      bool matchesName =
+          nameSearchController.text.isEmpty ||
+          item.name.toLowerCase().contains(
+            nameSearchController.text.toLowerCase(),
+          );
+
+      bool matchesDescription =
+          descriptionSearchController.text.isEmpty ||
+          item.description.toLowerCase().contains(
+            descriptionSearchController.text.toLowerCase(),
+          );
+
+      bool matchesPrice =
+          priceSearchController.text.isEmpty ||
+          item.price.toString().contains(
+            priceSearchController.text.toLowerCase(),
+          );
+
+      bool matchesTags =
+          tagsSearchController.isEmpty ||
+          item.tags.any(
+            (tag) => tag.toLowerCase().contains(
+              tagsSearchController.first.toLowerCase(),
+            ),
+          );
+
+      return matchesName && matchesDescription && matchesPrice && matchesTags;
+    }).toList();
+
+    emit(SearchItems());
+    debugPrint('Search items: ${searchItems.length}');
   }
 }

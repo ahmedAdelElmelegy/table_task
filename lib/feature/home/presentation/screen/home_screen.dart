@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_task2/feature/home/presentation/widgets/action_btn.dart';
 import 'package:table_task2/feature/home/presentation/widgets/custom_table.dart';
-import 'package:table_task2/feature/home/presentation/widgets/form_item_desktop_and_tablet.dart';
-import 'package:table_task2/feature/home/presentation/widgets/form_item_mobile.dart';
 import 'package:table_task2/feature/home/presentation/widgets/form_page_view.dart';
 import 'package:table_task2/feature/home/presentation/widgets/validation_summary.dart';
 import 'package:table_task2/manager/cubit/table_cubit.dart';
@@ -27,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     final tableCubit = BlocProvider.of<TableCubit>(context);
-    tableCubit.pageController!.dispose();
+    tableCubit.pageController.dispose();
     super.dispose();
   }
 

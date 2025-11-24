@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:table_task2/feature/home/presentation/model/item_model.dart';
+import 'package:table_task2/feature/home/presentation/widgets/filter_field.dart';
 import 'package:table_task2/manager/cubit/table_cubit.dart';
 
 class CustomTable extends StatefulWidget {
@@ -33,27 +34,34 @@ class _CustomTableState extends State<CustomTable> {
               ),
             ],
           ),
-          child: SfDataGrid(
-            autoExpandGroups: true,
-            selectionMode: SelectionMode.singleDeselect,
+          child: Column(
+            children: [
+              FilteredFields(cubit: cubit),
+              SfDataGrid(
+                autoExpandGroups: true,
+                selectionMode: SelectionMode.singleDeselect,
 
-            isScrollbarAlwaysShown: true,
-            gridLinesVisibility: GridLinesVisibility.both,
-            // defaultColumnWidth: 120,
-            rowsPerPage: cubit.numberOfForms,
-            columnSizer: _customGridColumnSizer,
-            allowSorting: true,
-            headerGridLinesVisibility: GridLinesVisibility.both,
-            columnWidthMode: ColumnWidthMode.fill,
-            frozenColumnsCount: 0,
+                isScrollbarAlwaysShown: true,
+                gridLinesVisibility: GridLinesVisibility.both,
+                // defaultColumnWidth: 120,
+                rowsPerPage: cubit.numberOfForms,
+                columnSizer: _customGridColumnSizer,
+                allowSorting: true,
+                headerGridLinesVisibility: GridLinesVisibility.both,
+                columnWidthMode: ColumnWidthMode.fill,
+                frozenColumnsCount: 0,
 
-            headerRowHeight: 55,
+                headerRowHeight: 55,
 
-            source: EmployeeDataSource(
-              employees: cubit.items,
-              context: context,
-            ),
-            columns: _tableColumns(),
+                source: EmployeeDataSource(
+                  employees: cubit.searchItems.isEmpty
+                      ? cubit.items
+                      : cubit.searchItems,
+                  context: context,
+                ),
+                columns: _tableColumns(),
+              ),
+            ],
           ),
         );
       },

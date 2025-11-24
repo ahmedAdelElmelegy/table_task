@@ -22,6 +22,7 @@ class CustomInputField extends StatefulWidget {
   final Future<List<dynamic>> Function(String?, int page)? asyncItems;
   final List<dynamic>? selectedValues;
   final ValueChanged<dynamic>? onChanged;
+  final bool isHeader;
 
   // 🧩 Checkbox
   final bool? boolValue;
@@ -29,6 +30,7 @@ class CustomInputField extends StatefulWidget {
 
   const CustomInputField({
     super.key,
+    this.isHeader = true,
     required this.type,
     required this.label,
     this.validator,
@@ -71,7 +73,11 @@ class _CustomInputFieldState extends State<CustomInputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label, style: TextStyle(color: Colors.black, fontSize: 14)),
+        if (widget.isHeader)
+          Text(
+            widget.label,
+            style: TextStyle(color: Colors.black, fontSize: 14),
+          ),
         const SizedBox(height: 8),
         TextFormField(
           readOnly: widget.readOnly,
@@ -114,7 +120,11 @@ class _CustomInputFieldState extends State<CustomInputField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label, style: TextStyle(color: Colors.black, fontSize: 14)),
+        if (widget.isHeader)
+          Text(
+            widget.label,
+            style: TextStyle(color: Colors.black, fontSize: 14),
+          ),
         const SizedBox(height: 8),
         DropdownSearch<dynamic>.multiSelection(
           validator: (value) {

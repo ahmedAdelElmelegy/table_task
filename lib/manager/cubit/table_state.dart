@@ -24,3 +24,5 @@ final class TableUpdated extends TableState {}
 final class TableDeleted extends TableState {}
 
 final class UpdateItem extends TableState {}
+
+final class SearchItems extends TableState {}
