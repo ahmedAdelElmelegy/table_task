@@ -29,7 +29,7 @@ class TableCubit extends Cubit<TableState> {
     (index) => TextEditingController(),
   );
   List<List<dynamic>> tagsControllers = List.generate(10, (index) => []);
-  PageController pageController = PageController();
+  late PageController pageController;
   bool isUpdate = false;
   bool isWheelScrolling = false;
   int currentPage = 0;

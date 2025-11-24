@@ -5,6 +5,7 @@ import 'package:table_task2/feature/home/presentation/widgets/action_btn.dart';
 import 'package:table_task2/feature/home/presentation/widgets/custom_table.dart';
 import 'package:table_task2/feature/home/presentation/widgets/form_item_desktop_and_tablet.dart';
 import 'package:table_task2/feature/home/presentation/widgets/form_item_mobile.dart';
+import 'package:table_task2/feature/home/presentation/widgets/form_page_view.dart';
 import 'package:table_task2/feature/home/presentation/widgets/validation_summary.dart';
 import 'package:table_task2/manager/cubit/table_cubit.dart';
 
@@ -16,6 +17,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final tableCubit = BlocProvider.of<TableCubit>(context);
+    tableCubit.pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    final tableCubit = BlocProvider.of<TableCubit>(context);
+    tableCubit.pageController!.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -59,62 +74,64 @@ class _HomeScreenState extends State<HomeScreen> {
           return Stack(
             children: [
               SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+                physics: tableCubit.isInsidePageView
+                    ? const NeverScrollableScrollPhysics()
+                    : const BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     // Validation Summary
                     ValidationSummary(),
 
-                    SizedBox(
-                      height: size.width < 600 ? 650 : 420,
-                      child: PageView.builder(
-                        allowImplicitScrolling: true,
+                    MouseRegion(
+                      onEnter: (_) =>
+                          setState(() => tableCubit.isInsidePageView = true),
+                      onExit: (_) =>
+                          setState(() => tableCubit.isInsidePageView = false),
 
-                        controller: tableCubit.pageController,
-                        scrollDirection: Axis.vertical,
-                        pageSnapping: true,
+                      child: Listener(
+                        onPointerSignal: (event) async {
+                          final cubit = BlocProvider.of<TableCubit>(context);
 
-                        physics: const BouncingScrollPhysics(),
+                          // اشتغل بس لو الماوس جوه المنطقة
 
-                        itemCount: tableCubit.numberOfForms,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: size.width < 1000 ? 24 : 80,
-                              vertical: 36,
-                            ),
-                            child: AnimatedContainer(
-                              padding: const EdgeInsets.all(16),
-                              duration: const Duration(milliseconds: 500),
+                          // when move `mouse` out of the page view
+                          if (!cubit.isInsidePageView) return;
 
-                              curve: Curves.easeInOut,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border(
-                                  top: BorderSide(
-                                    color: tableCubit.formHasError[index]
-                                        ? Colors.red
-                                        : Colors.blue,
-                                    width: 4,
-                                  ),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.08),
-                                    blurRadius: 12,
-                                    spreadRadius: 0,
-                                    offset: Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                              child: size.width < 600
-                                  ? FormItemMobile(index: index)
-                                  : FormItemDesktopAndTablet(index: index),
-                            ),
-                          );
+                          if (event is PointerScrollEvent &&
+                              !cubit.isWheelScrolling) {
+                            cubit.isWheelScrolling = true;
+
+                            // Scroll Down
+                            if (event.scrollDelta.dy > 0) {
+                              cubit.currentPage++;
+                            }
+                            // Scroll Up
+                            else if (event.scrollDelta.dy < 0) {
+                              cubit.currentPage--;
+                            }
+
+                            cubit.currentPage = cubit.currentPage.clamp(
+                              0,
+                              cubit.numberOfForms - 1,
+                            );
+
+                            await cubit.pageController.animateToPage(
+                              cubit.currentPage,
+                              duration: const Duration(milliseconds: 800),
+                              curve: Curves.easeOut,
+                            );
+
+                            Future.delayed(
+                              const Duration(milliseconds: 100),
+                              () => cubit.isWheelScrolling = false,
+                            );
+                          }
                         },
+
+                        child: FormPageView(size: size, tableCubit: tableCubit),
                       ),
                     ),
+
                     const SizedBox(height: 24),
 
                     // Action Buttons
