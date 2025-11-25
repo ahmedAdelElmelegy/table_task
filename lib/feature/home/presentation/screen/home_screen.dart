@@ -1,6 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'dart:io' show Platform;
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,14 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (state is TableDeleted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(' items deleted successfully!'),
+                content: Text('item deleted successfully!'),
                 backgroundColor: Colors.green,
               ),
             );
           } else if (state is TableUpdated) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('All items updated successfully!'),
+                content: Text('item updated successfully!'),
                 backgroundColor: Colors.green,
               ),
             );
@@ -122,12 +119,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                     0,
                                     cubit.numberOfForms - 1,
                                   );
-
-                                  await cubit.pageController.animateToPage(
-                                    cubit.currentPage,
-                                    duration: const Duration(milliseconds: 800),
-                                    curve: Curves.easeOut,
-                                  );
+                                  if (!cubit.isUpdate) {
+                                    await cubit.pageController.animateToPage(
+                                      cubit.currentPage,
+                                      duration: const Duration(
+                                        milliseconds: 800,
+                                      ),
+                                      curve: Curves.easeOut,
+                                    );
+                                  }
 
                                   Future.delayed(
                                     const Duration(milliseconds: 100),
@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: const CustomTable(),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 36),
                   ],
                 ),
               ),

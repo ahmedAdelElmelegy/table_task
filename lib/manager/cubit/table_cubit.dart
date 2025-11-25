@@ -164,7 +164,7 @@ class TableCubit extends Cubit<TableState> {
         tags: tagsControllers[index].map((e) => e.toString()).toList(),
         actions: Icon(Icons.edit),
       );
-      emit(TableLoaded());
+      emit(TableUpdated());
       clearAllForms();
       updateValue(false);
     }

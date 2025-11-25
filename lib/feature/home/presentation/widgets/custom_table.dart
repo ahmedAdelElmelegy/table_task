@@ -22,7 +22,6 @@ class _CustomTableState extends State<CustomTable> {
 
         return Container(
           width: double.infinity,
-          height: 400,
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border(top: BorderSide(color: Colors.blue, width: 4)),
@@ -40,17 +39,18 @@ class _CustomTableState extends State<CustomTable> {
               FilteredFields(cubit: cubit),
               SfDataGrid(
                 autoExpandGroups: true,
-                selectionMode: SelectionMode.singleDeselect,
-
+                selectionMode: SelectionMode.multiple,
+                allowSwiping: true,
                 isScrollbarAlwaysShown: true,
-                gridLinesVisibility: GridLinesVisibility.both,
-                // defaultColumnWidth: 120,
-                rowsPerPage: cubit.numberOfForms,
-                allowSorting: true,
-                headerGridLinesVisibility: GridLinesVisibility.both,
-                columnWidthMode: ColumnWidthMode.fill,
-                frozenColumnsCount: 0,
 
+                rowsPerPage: cubit.numberOfForms,
+                defaultColumnWidth: 150,
+                gridLinesVisibility: GridLinesVisibility.both,
+                headerGridLinesVisibility: GridLinesVisibility.both,
+                allowSorting: true,
+                columnWidthMode: ColumnWidthMode.fill,
+
+                // frozenColumnsCount: 1,
                 headerRowHeight: 55,
 
                 source: EmployeeDataSource(
