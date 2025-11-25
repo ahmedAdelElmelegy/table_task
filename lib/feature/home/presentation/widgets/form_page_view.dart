@@ -18,9 +18,9 @@ class FormPageView extends StatelessWidget {
       child: PageView.builder(
         controller: tableCubit.pageController,
         scrollDirection: Axis.vertical,
-        physics: kIsWeb
-            ? const NeverScrollableScrollPhysics()
-            : const BouncingScrollPhysics(),
+        physics: size.width < 1000
+            ? const BouncingScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
         itemCount: tableCubit.numberOfForms,
 
         itemBuilder: (context, index) {

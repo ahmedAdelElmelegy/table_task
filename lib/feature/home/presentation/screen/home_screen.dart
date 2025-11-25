@@ -1,6 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+import 'dart:io' show Platform;
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         },
         builder: (context, state) {
+          bool isMobile = size.width < 1000;
           return Stack(
             children: [
               SingleChildScrollView(
@@ -83,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Validation Summary
                     ValidationSummary(),
 
-                    !kIsWeb
+                    isMobile
                         ? FormPageView(size: size, tableCubit: tableCubit)
                         : MouseRegion(
                             onEnter: (_) => setState(
