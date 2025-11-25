@@ -95,7 +95,9 @@ class FilteredFields extends StatelessWidget {
                   asyncItems: (filter, page) async {
                     return ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5'];
                   },
-                  selectedValues: cubit.tagsSearchController,
+                  onChanged: (value) {
+                    cubit.tagsSearchController = value;
+                  },
 
                   label: 'Tags ',
                   isHeader: false,

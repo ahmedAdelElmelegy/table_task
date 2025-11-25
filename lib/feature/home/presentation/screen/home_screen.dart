@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,55 +83,64 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Validation Summary
                     ValidationSummary(),
 
-                    MouseRegion(
-                      onEnter: (_) =>
-                          setState(() => tableCubit.isInsidePageView = true),
-                      onExit: (_) =>
-                          setState(() => tableCubit.isInsidePageView = false),
+                    !kIsWeb
+                        ? FormPageView(size: size, tableCubit: tableCubit)
+                        : MouseRegion(
+                            onEnter: (_) => setState(
+                              () => tableCubit.isInsidePageView = true,
+                            ),
+                            onExit: (_) => setState(
+                              () => tableCubit.isInsidePageView = false,
+                            ),
 
-                      child: Listener(
-                        onPointerSignal: (event) async {
-                          final cubit = BlocProvider.of<TableCubit>(context);
+                            child: Listener(
+                              onPointerSignal: (event) async {
+                                final cubit = BlocProvider.of<TableCubit>(
+                                  context,
+                                );
 
-                          // اشتغل بس لو الماوس جوه المنطقة
+                                // اشتغل بس لو الماوس جوه المنطقة
 
-                          // when move `mouse` out of the page view
-                          if (!cubit.isInsidePageView) return;
+                                // when move `mouse` out of the page view
+                                if (!cubit.isInsidePageView) return;
 
-                          if (event is PointerScrollEvent &&
-                              !cubit.isWheelScrolling) {
-                            cubit.isWheelScrolling = true;
+                                if (event is PointerScrollEvent &&
+                                    !cubit.isWheelScrolling) {
+                                  cubit.isWheelScrolling = true;
 
-                            // Scroll Down
-                            if (event.scrollDelta.dy > 0) {
-                              cubit.currentPage++;
-                            }
-                            // Scroll Up
-                            else if (event.scrollDelta.dy < 0) {
-                              cubit.currentPage--;
-                            }
+                                  // Scroll Down
+                                  if (event.scrollDelta.dy > 0) {
+                                    cubit.currentPage++;
+                                  }
+                                  // Scroll Up
+                                  else if (event.scrollDelta.dy < 0) {
+                                    cubit.currentPage--;
+                                  }
 
-                            cubit.currentPage = cubit.currentPage.clamp(
-                              0,
-                              cubit.numberOfForms - 1,
-                            );
+                                  cubit.currentPage = cubit.currentPage.clamp(
+                                    0,
+                                    cubit.numberOfForms - 1,
+                                  );
 
-                            await cubit.pageController.animateToPage(
-                              cubit.currentPage,
-                              duration: const Duration(milliseconds: 800),
-                              curve: Curves.easeOut,
-                            );
+                                  await cubit.pageController.animateToPage(
+                                    cubit.currentPage,
+                                    duration: const Duration(milliseconds: 800),
+                                    curve: Curves.easeOut,
+                                  );
 
-                            Future.delayed(
-                              const Duration(milliseconds: 100),
-                              () => cubit.isWheelScrolling = false,
-                            );
-                          }
-                        },
+                                  Future.delayed(
+                                    const Duration(milliseconds: 100),
+                                    () => cubit.isWheelScrolling = false,
+                                  );
+                                }
+                              },
 
-                        child: FormPageView(size: size, tableCubit: tableCubit),
-                      ),
-                    ),
+                              child: FormPageView(
+                                size: size,
+                                tableCubit: tableCubit,
+                              ),
+                            ),
+                          ),
 
                     const SizedBox(height: 24),
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:table_task2/feature/home/presentation/widgets/form_item_desktop_and_tablet.dart';
 import 'package:table_task2/feature/home/presentation/widgets/form_item_mobile.dart';
@@ -17,7 +18,9 @@ class FormPageView extends StatelessWidget {
       child: PageView.builder(
         controller: tableCubit.pageController,
         scrollDirection: Axis.vertical,
-        physics: const NeverScrollableScrollPhysics(),
+        physics: kIsWeb
+            ? const NeverScrollableScrollPhysics()
+            : const BouncingScrollPhysics(),
         itemCount: tableCubit.numberOfForms,
 
         itemBuilder: (context, index) {

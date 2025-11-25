@@ -46,7 +46,6 @@ class _CustomTableState extends State<CustomTable> {
                 gridLinesVisibility: GridLinesVisibility.both,
                 // defaultColumnWidth: 120,
                 rowsPerPage: cubit.numberOfForms,
-                columnSizer: _customGridColumnSizer,
                 allowSorting: true,
                 headerGridLinesVisibility: GridLinesVisibility.both,
                 columnWidthMode: ColumnWidthMode.fill,
@@ -96,40 +95,6 @@ class _CustomTableState extends State<CustomTable> {
   }
 }
 
-class CustomGridColumnSizer extends ColumnSizer {
-  @override
-  double computeHeaderCellWidth(GridColumn column, TextStyle style) {
-    return super.computeHeaderCellWidth(column, style);
-  }
-
-  @override
-  double computeCellWidth(
-    GridColumn column,
-    DataGridRow row,
-    Object? cellValue,
-    TextStyle textStyle,
-  ) {
-    return super.computeCellWidth(column, row, cellValue, textStyle);
-  }
-
-  @override
-  double computeHeaderCellHeight(GridColumn column, TextStyle textStyle) {
-    return super.computeHeaderCellHeight(column, textStyle);
-  }
-
-  @override
-  double computeCellHeight(
-    GridColumn column,
-    DataGridRow row,
-    Object? cellValue,
-    TextStyle textStyle,
-  ) {
-    return super.computeCellHeight(column, row, cellValue, textStyle);
-  }
-}
-
-final CustomGridColumnSizer _customGridColumnSizer = CustomGridColumnSizer();
-
 class EmployeeDataSource extends DataGridSource {
   final BuildContext context;
 
@@ -173,6 +138,7 @@ class EmployeeDataSource extends DataGridSource {
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.all(16.0),
           child: dataGridCell.columnName == 'actions'
+              // table action method
               ? TableAction(
                   cubit: cubit,
                   index: index,

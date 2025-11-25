@@ -115,7 +115,7 @@ class _FormItemMobileState extends State<FormItemMobile>
                   return null;
                 },
                 type: InputType.dropdown,
-                selectedValues: tableCubit.tagsControllers[widget.index],
+                // selectedValues: tableCubit.tagsControllers[widget.index],
                 asyncItems: (filter, page) async {
                   return ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5'];
                 },

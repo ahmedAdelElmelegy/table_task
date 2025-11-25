@@ -206,15 +206,19 @@ class TableCubit extends Cubit<TableState> {
 
       bool matchesTags =
           tagsSearchController.isEmpty ||
-          item.tags.any(
-            (tag) => tag.toLowerCase().contains(
-              tagsSearchController.first.toLowerCase(),
+          tagsSearchController.any(
+            (searchTag) => item.tags.any(
+              (tag) => tag.toLowerCase().contains(searchTag.toLowerCase()),
             ),
           );
 
       return matchesName && matchesDescription && matchesPrice && matchesTags;
     }).toList();
-
+    if (tagsSearchController.isNotEmpty) {
+      debugPrint('Search items: ${tagsSearchController.first}');
+    } else {
+      debugPrint('Search items: No Tags Selected');
+    }
     emit(SearchItems());
     debugPrint('Search items: ${searchItems.length}');
   }
