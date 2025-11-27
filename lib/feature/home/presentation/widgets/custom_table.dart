@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:table_task2/feature/home/presentation/model/item_model.dart';
+import 'package:table_task2/feature/home/presentation/widgets/authomatic_selectable_text.dart';
 import 'package:table_task2/feature/home/presentation/widgets/filter_field.dart';
 import 'package:table_task2/feature/home/presentation/widgets/table_action.dart';
 import 'package:table_task2/manager/cubit/table_cubit.dart';
@@ -16,12 +17,13 @@ class CustomTable extends StatefulWidget {
 class _CustomTableState extends State<CustomTable> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return BlocBuilder<TableCubit, TableState>(
       builder: (context, state) {
         final cubit = BlocProvider.of<TableCubit>(context);
 
         return Container(
-          width: double.infinity,
+          width: size.width < 1000 ? 1440 : double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border(top: BorderSide(color: Colors.blue, width: 4)),
@@ -48,7 +50,9 @@ class _CustomTableState extends State<CustomTable> {
                 gridLinesVisibility: GridLinesVisibility.both,
                 headerGridLinesVisibility: GridLinesVisibility.both,
                 allowSorting: true,
-                columnWidthMode: ColumnWidthMode.fill,
+                columnWidthMode: size.width < 1000
+                    ? ColumnWidthMode.auto
+                    : ColumnWidthMode.fill,
 
                 // frozenColumnsCount: 1,
                 headerRowHeight: 55,
@@ -146,15 +150,7 @@ class EmployeeDataSource extends DataGridSource {
                   context: context,
                 )
               : dataGridCell.columnName == 'tags'
-              ? Text(
-                  dataGridCell.value.join(', '),
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Urbanist',
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                )
+              ? AutoScrollSelectableText(text: dataGridCell.value.join(', '))
               : Text(
                   dataGridCell.value.toString(),
                   style: TextStyle(

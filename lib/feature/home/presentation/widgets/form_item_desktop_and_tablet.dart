@@ -135,7 +135,7 @@ class _FormItemDesktopAndTabletState extends State<FormItemDesktopAndTablet>
                               tableCubit.tagsControllers[widget.index],
                           asyncItems: (filter, page) async {
                             return [
-                              'Tag 1',
+                              'Tag 1gjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',
                               'Tag 2',
                               'Tag 3',
                               'Tag 4',
